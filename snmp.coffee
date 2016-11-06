@@ -1,0 +1,103 @@
+capitalizeFirstLetter = (string) =>
+  return string.charAt(0).toUpperCase() + string.slice(1)
+
+module.exports = (env) ->
+
+  Promise = env.require 'bluebird'
+  snmp = require 'snmp-native'
+  _ = env.require 'lodash'
+  
+  class SNMP extends env.plugins.Plugin
+
+    init: (app, @framework, @config) =>
+      
+      deviceConfigDef = require("./device-config-schema.coffee")
+      
+      @framework.deviceManager.registerDeviceClass("SnmpSensor", {
+        configDef: deviceConfigDef.SnmpSensor,
+        createCallback: (config) => new SnmpSensor(config, @, @framework)
+      })      
+
+  class SnmpSensor extends env.devices.Sensor
+
+    constructor: (@config, @plugin, @framework) ->
+      @id = @config.id
+      @name = @config.name  
+      @debug = @plugin.config.debug 
+      @timers = []
+      @community = @config.community
+      @oid = @config.oid
+
+      @session = new snmp.Session({host: @config.host, port: 161, community: "#{@community}"})        
+      Promise.promisifyAll @session      
+      if @debug
+        env.logger.debug @session 
+
+      if not _.isEmpty(@config.attributes)
+        @attributes = @config.attributes
+        for own attrName of @config.attributes
+          do (attrName) =>
+            @_createGetter(attrName, () =>
+              if @attributes[attrName]?
+                if @attributes[attrName].value?
+                  Promise.resolve @attributes[attrName].value
+                else
+                  Promise.reject "Invalid value for attribute: #{attrName}"
+              else
+                Promise.reject "No such attribute: #{attrName}"
+            )
+            @timers.push setInterval(
+              ( =>
+                @readSnmpData(attrName)
+                @['get' + (capitalizeFirstLetter attrName)]()
+              ), @config.interval
+            )    
+      else
+        @session.getNextAsync({ oid: @oid }).then( (result) =>
+          if result.length > 0
+            if @debug
+              env.logger.debug JSON.stringify(result) 
+            
+            @attr = _.cloneDeep(@attributes)
+            for own attrName, value of result
+              type = null
+              if _.isNumber(value)
+                type = "number"
+              else if _.isBoolean(value)
+                type = "boolean"
+              else
+                type = "string"
+
+              @attr[attrName] = {
+                type: type
+                description: attrName
+                value: value
+                acronym: attrName
+              }
+            if @debug
+              env.logger.debug @attr
+
+            @config.attributes = @attr
+            @framework.deviceManager.recreateDevice(@, @config)
+          else
+            env.logger.error "empty result for wmi query #{@command}"
+        )      
+      super(@config, @plugin, @framework)  
+
+    destroy: () ->
+      for timerId in @timers
+        clearInterval timerId
+      super()
+
+    readSnmpData: (attrName) ->
+      @session.getNextAsync({ oid: @oid }).then( (result) =>
+        if @debug
+          env.logger.debug result[0].oid + ' : ' + result[0].value 
+        if @config.attributes[attrName].value isnt result[0].value or not @config.attributes[attrName].discrete
+          @emit attrName, result[0].value
+        @attributes[attrName].value = result[0].value
+        @config.attributes[attrName].value = result[0].value
+        Promise.resolve @attributes[attrName].value
+      )
+
+  return new SNMP
