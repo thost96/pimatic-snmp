@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/pimatic-snmp.svg)](http://badge.fury.io/js/pimatic-snmp)
 [![dependencies status](https://david-dm.org/thost96/pimatic-snmp/status.svg)](https://david-dm.org/thost96/pimatic-snmp)
 
-A pimatic plugin to make snmp get request.
+A pimatic plugin to make snmp get request. The Oid can be found in the device mib file. 
 
 ## Plugin Configuration
 	{
@@ -45,7 +45,7 @@ If you already created a SnmpSensor device and you change the oid later, all att
 
 * Add support for oid names as label
 * Add automatic clearing of attributes if command was changed
-* Add funtion to set oids using rules
+* Add set funtion for rule usage
 
 ## History
 
