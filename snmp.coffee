@@ -16,7 +16,8 @@ module.exports = (env) ->
       @framework.deviceManager.registerDeviceClass("SnmpSensor", {
         configDef: deviceConfigDef.SnmpSensor,
         createCallback: (config) => new SnmpSensor(config, @, @framework)
-      })      
+      })
+      
 
   class SnmpSensor extends env.devices.Sensor
 
@@ -48,7 +49,7 @@ module.exports = (env) ->
             )
             @timers.push setInterval(
               ( =>
-                @readSnmpData(attrName)
+                @readSnmpData()
                 @['get' + (capitalizeFirstLetter attrName)]()
               ), @config.interval
             )    
@@ -59,7 +60,7 @@ module.exports = (env) ->
               env.logger.debug JSON.stringify(result) 
             
             @attr = _.cloneDeep(@attributes)
-            for own attrName, value of result
+            for own value of result
               type = null
               if _.isNumber(value)
                 type = "number"
@@ -68,11 +69,11 @@ module.exports = (env) ->
               else
                 type = "string"
 
-              @attr[attrName] = {
+              @attr[@config.oid.toString()] = {
                 type: type
-                description: attrName
+                description: @config.oid.toString()
                 value: value
-                acronym: attrName
+                acronym: @config.oid.toString()
               }
             if @debug
               env.logger.debug @attr
@@ -89,15 +90,15 @@ module.exports = (env) ->
         clearInterval timerId
       super()
 
-    readSnmpData: (attrName) ->
+    readSnmpData: () ->
       @session.getNextAsync({ oid: @oid }).then( (result) =>
         if @debug
           env.logger.debug result[0].oid + ' : ' + result[0].value 
-        if @config.attributes[attrName].value isnt result[0].value or not @config.attributes[attrName].discrete
-          @emit attrName, result[0].value
-        @attributes[attrName].value = result[0].value
-        @config.attributes[attrName].value = result[0].value
-        Promise.resolve @attributes[attrName].value
+        if @config.attributes[@config.oid.toString()].value isnt result[0].value or not @config.attributes[@config.oid.toString()].discrete
+          @emit @config.oid.toString(), result[0].value
+        @attributes[@config.oid.toString()].value = result[0].value
+        @config.attributes[@config.oid.toString()].value = result[0].value
+        Promise.resolve @attributes[@config.oid.toString()].value
       )
 
   return new SNMP
