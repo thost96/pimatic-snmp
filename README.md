@@ -34,12 +34,14 @@ The SnmpSensor displays the output of your specified command to the gui.
 | Property          | Default  | Type    | Description                                 |
 |:------------------|:---------|:--------|:--------------------------------------------|
 | host              | -        | String  | Hostname or IP address of target device |
-| oid	 			| - 	   | Array 	 | oid(s) which should be requested from target device |
+| oid	 			| - 	   | String	 | oid(s) which should be requested from target device |
 | community			| "public" | String  | snmp community for read and/or write access  |
 | interval 			| 60000    | Number  | The time interval in milliseconds at which the oid is queried |
 | attributes		| -		   | Object  | Attributes are automatical saved to config for later support for rules | 
 
 If you already created a SnmpSensor device and you change the oid later, all attributes from this device need to be deleted, before the new attributes are shown. 
+
+The oid must be provied using this format: .x.xx.x.x.x.xxx - for example: .1.2.840.10006.300.43.1.3.0
 
 ## ToDo
 

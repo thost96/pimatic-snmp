@@ -9,7 +9,7 @@ module.exports = {
         type: "string"
       oid:
         description: "device specific oid"
-        type: ["array"]
+        type: "string"
       community:
         description: "snmp comunity name"
         type: "string"
