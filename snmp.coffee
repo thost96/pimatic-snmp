@@ -29,7 +29,7 @@ module.exports = (env) ->
       @community = @config.community
       @oid = @config.oid
 
-      @session = new snmp.Session({host: @config.host, port: 161, community: "#{@community}"})        
+      @session = new snmp.Session({host: @config.host, port: @config.port, community: "#{@community}"})        
       Promise.promisifyAll @session      
       if @debug
         env.logger.debug @session 
@@ -47,6 +47,10 @@ module.exports = (env) ->
               else
                 Promise.reject "No such attribute: #{attrName}"
             )
+            #fix for directly reading data from device
+            @readSnmpData()
+            @['get' + (capitalizeFirstLetter attrName)]()
+            #schedule function for reading data from device using interval
             @timers.push setInterval(
               ( =>
                 @readSnmpData()
@@ -54,7 +58,7 @@ module.exports = (env) ->
               ), @config.interval
             )    
       else
-        @session.getNextAsync({ oid: @oid }).then( (result) =>
+        @session.getAsync({ oid: @oid }).then( (result) =>
           if result.length > 0
             if @debug
               env.logger.debug JSON.stringify(result) 
@@ -91,7 +95,7 @@ module.exports = (env) ->
       super()
 
     readSnmpData: () ->
-      @session.getNextAsync({ oid: @oid }).then( (result) =>
+      @session.getAsync({ oid: @oid }).then( (result) =>
         if @debug
           env.logger.debug result[0].oid + ' : ' + result[0].value 
         if @config.attributes[@config.oid.toString()].value isnt result[0].value or not @config.attributes[@config.oid.toString()].discrete
