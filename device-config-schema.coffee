@@ -7,6 +7,10 @@ module.exports = {
       host:
         description: "host dns name or ip address"
         type: "string"
+      port:
+        description: "port used for snmp"
+        type: "number"
+        default: 161
       oid:
         description: "device specific oid"
         type: "string"

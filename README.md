@@ -34,6 +34,7 @@ The SnmpSensor displays the output of your specified command to the gui.
 | Property          | Default  | Type    | Description                                 |
 |:------------------|:---------|:--------|:--------------------------------------------|
 | host              | -        | String  | Hostname or IP address of target device |
+| port 				| 161	   | Number	 | Port used by snmp
 | oid	 			| - 	   | String	 | oid(s) which should be requested from target device |
 | community			| "public" | String  | snmp community for read and/or write access  |
 | interval 			| 60000    | Number  | The time interval in milliseconds at which the oid is queried |
@@ -48,6 +49,7 @@ The oid must be provied using this format: .x.xx.x.x.x.xxx - for example: .1.2.8
 * Add support for oid names as label
 * Add automatic clearing of attributes if command was changed
 * Add set funtion for rule usage
+* Add autodiscover functionality
 
 ## History
 
