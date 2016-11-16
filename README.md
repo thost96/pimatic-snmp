@@ -3,13 +3,15 @@
 [![npm version](https://badge.fury.io/js/pimatic-snmp.svg)](http://badge.fury.io/js/pimatic-snmp)
 [![dependencies status](https://david-dm.org/thost96/pimatic-snmp/status.svg)](https://david-dm.org/thost96/pimatic-snmp)
 
-A pimatic plugin to make snmp get request. The Oid can be found in the device mib file. 
+A pimatic plugin to make snmp get request. The Oid can be found in the device mib file provided by the manufacture or using [Oidview](http://www.oidview.com/). 
 
 ## Plugin Configuration
+
 	{
           "plugin": "snmp",
           "debug": false
     }
+
 The plugin has the following configuration properties:
 
 | Property          | Default  | Type    | Description                                 |
@@ -18,7 +20,12 @@ The plugin has the following configuration properties:
 
 
 ## Device Configuration
-The following device can be used:
+The plugin supports auto discover of snmp devices on your connected networks. 
+As default the community `"public"` and the oid `'.1.3.6.1.2.1.1.5.0'` for sysname property are used.
+
+Please make sure, that these device(s) also allow ICMP requests for discovery!
+
+The following device can also be created manually:
 
 #### SnmpSensor
 The SnmpSensor displays the output of your specified command to the gui. 
@@ -28,7 +35,7 @@ The SnmpSensor displays the output of your specified command to the gui.
 			"class": "SnmpSensor",
 			"name": "Snmp Sensor",
 			"host": "",			
-			"oid": ""
+			"oid": ".1.3.6.1.2.1.1.5.0"
 	}
 
 | Property          | Default  | Type    | Description                                 |
@@ -49,7 +56,8 @@ The oid must be provied using this format: .x.xx.x.x.x.xxx - for example: .1.2.8
 * Add support for oid names as label
 * Add automatic clearing of attributes if command was changed
 * Add set funtion for rule usage
-* Add autodiscover functionality
+* Add support for multiple oids at a single device
+* Implement other devices for Presense, Temperature etc.
 
 ## History
 

@@ -1,5 +1,11 @@
 # Release History
 
+* 20161116, v0.2.0
+	* Added auto discovery for snmp devices on local network
+	* Update README.md
+	* Added net-ping to dependencies
+	* Added License to package.json
+
 * 20161114, v0.1.3
 	* Changed getNextAsync to getAsync 
 	* Added option to modify snmp port
