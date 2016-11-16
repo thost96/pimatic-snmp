@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/pimatic-snmp.svg)](http://badge.fury.io/js/pimatic-snmp)
 [![dependencies status](https://david-dm.org/thost96/pimatic-snmp/status.svg)](https://david-dm.org/thost96/pimatic-snmp)
 
-A pimatic plugin to make snmp get request. The Oid can be found in the device mib file provided by the manufacture or using [oidview](http://www.oidview.com/). 
+A pimatic plugin to make snmp get request. The Oid can be found in the device mib file provided by the manufacture or using [Oidview](http://www.oidview.com/). 
 
 ## Plugin Configuration
 
@@ -21,9 +21,9 @@ The plugin has the following configuration properties:
 
 ## Device Configuration
 The plugin supports auto discover of snmp devices on your connected networks. 
-As default the community "public" and the oid `'.1.3.6.1.2.1.1.5.0'` for sysname property is used.
+As default the community `"public"` and the oid `'.1.3.6.1.2.1.1.5.0'` for sysname property are used.
 
-Please make sure, that these device(s) also allow icmp requests for discovery!
+Please make sure, that these device(s) also allow ICMP requests for discovery!
 
 The following device can also be created manually:
 
