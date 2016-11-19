@@ -23,8 +23,6 @@ The plugin has the following configuration properties:
 The plugin supports auto discover of snmp devices on your connected networks. 
 As default the community `"public"` and the oid `'.1.3.6.1.2.1.1.5.0'` for sysname property are used.
 
-Please make sure, that these device(s) also allow ICMP requests for discovery!
-
 The following device can also be created manually:
 
 #### SnmpSensor

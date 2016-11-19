@@ -7,9 +7,9 @@ module.exports = (env) ->
   snmp = require 'snmp-native'
   _ = env.require 'lodash'
   os = require 'os'
-  ping = env.ping or require("net-ping")
- 
-  
+  Netmask = require('netmask').Netmask
+
+    
   class SNMP extends env.plugins.Plugin
 
     init: (app, @framework, @config) =>
@@ -26,58 +26,32 @@ module.exports = (env) ->
         @framework.deviceManager.discoverMessage 'pimatic-snmp', "scanning network for snmp devices"
         
         interfaces = @listInterfaces()
-        maxPings = 513 #only /24 netmask
-        pingCount = 0
-        interfaces.forEach( (iface, ifNum) =>
-          #/24 netmask only           
-          base = iface.address.match(/([0-9]+\.[0-9]+\.[0-9]+\.)[0-9]+/)[1]
-          @framework.deviceManager.discoverMessage 'pimatic-snmp', "Scanning #{base}0/#{iface.netmask}"
-          
-          #console.log base
-          i = 1 #only /24 netmask
+        interfaces.forEach( (iface) =>
 
-          while i < 256 #only netmask /24
-            do (i) =>
-              if pingCount > maxPings then return
-              
-              address = "#{base}#{i}" #increment ip base + i = x.x.x.i = 192.168.1.1/2/3/4
-              sessionId = ((process.pid + i) % 65535)
-              
-              session = ping.createSession(
-                networkProtocol: ping.NetworkProtocol.IPv4 #ipv4 only ?
-                packetSize: 16
-                retries: 1
-                sessionId: sessionId
-                timeout: eventData.time
-                ttl: 128
-              )
-              session.pingHost(address, (error, target) =>
-                session.close()
-                unless error
-                  snmpsession = Promise.promisifyAll( new snmp.Session({host: target, port: 161, community: "public"}) )       
-                  snmpsession.getAsync({ oid: '.1.3.6.1.2.1.1.5.0' }).then( (result) =>
-                    if not _.isEmpty(result)
-                      
-                      deviceConfig = 
-                        id: "snmp-" + target.replace(/\./g,'') #or using sysname result[0].value?
-                        name: result[0].value
-                        class: 'SnmpSensor'
-                        oid: '.1.3.6.1.2.1.1.5.0'
-                        host: target
+          @framework.deviceManager.discoverMessage 'pimatic-snmp', "Scanning #{iface.address}/#{iface.netmask}"
+         
+          block = new Netmask("#{iface.address}/#{iface.netmask}")
+          block.forEach( (ip, long, index) =>
+            if @debug
+              env.logger.debug "#{ip} - #{long} - #{index}"  
 
-                      @framework.deviceManager.discoveredDevice 'pimatic-snmp', "#{deviceConfig.name}", deviceConfig
-                  ).catch ( (err) ->
-                    return 
-                  )                            
-              )
+            snmpsession = Promise.promisifyAll( new snmp.Session({host: ip, port: 161, community: "public"}) ) 
+            snmpsession.getAsync({ oid: '.1.3.6.1.2.1.1.5.0' }).then( (result) =>
+              if not _.isEmpty(result)
 
-            i++
-            pingCount++
+                deviceConfig = 
+                  id: "snmp-" + ip.replace(/\./g,'') #or using sysname result[0].value?
+                  name: result[0].value
+                  class: 'SnmpSensor'
+                  oid: '.1.3.6.1.2.1.1.5.0'
+                  host: ip
 
-          if pingCount > maxPings
-            @framework.deviceManager.discoverMessage 'pimatic-snmp', "Could not ping all networks, max ping cound reached."
+                @framework.deviceManager.discoveredDevice 'pimatic-snmp', "#{deviceConfig.name}", deviceConfig
+            ).catch ( (err) ->
+              return 
+            )  
+          )
         )
-
 
     listInterfaces: () ->
       interfaces = []
@@ -121,10 +95,8 @@ module.exports = (env) ->
               else
                 Promise.reject "No such attribute: #{attrName}"
             )
-            #fix for directly reading data from device
             @readSnmpData()
             @['get' + (capitalizeFirstLetter attrName)]()
-            #schedule function for reading data from device using interval
             @timers.push setInterval(
               ( =>
                 @readSnmpData()
@@ -159,7 +131,7 @@ module.exports = (env) ->
             @config.attributes = @attr
             @framework.deviceManager.recreateDevice(@, @config)
           else
-            env.logger.error "empty result for wmi query #{@command}"
+            env.logger.error "empty result for snmp query #{@oid}"
         )      
       super(@config, @plugin, @framework)  
 
