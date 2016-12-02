@@ -11,7 +11,7 @@
     "LICENSE"
   ],
   "license": "GPL-2.0",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "homepage": "http://github.com/thost96/",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   "configSchema": "snmp-config-schema.coffee",
   "dependencies": {
     "snmp-native": "1.0.21",
-    "netmask": "^1.0.6",
+    "netmask": "^1.0.6"
   },
   "peerDependencies": {
     "pimatic": ">=0.8.0 <1.0.0"

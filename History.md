@@ -1,5 +1,11 @@
 # Release History
 
+* 20161202, v0.3.0
+	* Added support for oid names as label
+	* Added support for multiple oids at a single device
+	* Updated README.md
+	* Modified and minimized debug ouput
+
 * 20161118, v0.2.1
 	* Removed net-ping dependencies
 	* Removed icmp scan of local networks for discovery

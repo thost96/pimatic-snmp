@@ -11,9 +11,20 @@ module.exports = {
         description: "port used for snmp"
         type: "number"
         default: 161
-      oid:
-        description: "device specific oid"
-        type: "string"
+      oids:
+        description: "device specific oids"
+        type: "array"
+        format: "table"
+        default: []
+        items:
+          type: "object"
+          properties:
+            label:
+              type: "string"
+              description: "oid label"
+            oid:        
+              type: "string"
+              description: "device specific oid"
       community:
         description: "snmp comunity name"
         type: "string"
