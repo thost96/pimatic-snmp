@@ -1,5 +1,19 @@
 # Release History
 
+* 20161202, v0.3.0
+	* Added support for oid names as label
+	* Added support for multiple oids at a single device
+	* Updated README.md
+	* Modified and minimized debug ouput
+
+* 20161118, v0.2.1
+	* Removed net-ping dependencies
+	* Removed icmp scan of local networks for discovery
+	* Updated README.md
+	* Added netmask to dependencies
+	* Added support for other networks then /24 using netmask
+	* Fixed some typos
+
 * 20161116, v0.2.0
 	* Added auto discovery for snmp devices on local network
 	* Update README.md
