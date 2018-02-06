@@ -1,5 +1,8 @@
 # Release History
 
+* 20180206, v0.4.1
+	* added Travis CI and updated readme
+
 * 20161208, v0.4.0 
 	* Added SnmpPresenceSensor
 	* Updated README.md
