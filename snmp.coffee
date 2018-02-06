@@ -21,6 +21,11 @@ module.exports = (env) ->
         configDef: deviceConfigDef.SnmpSensor,
         createCallback: (config) => new SnmpSensor(config, @, @framework)
       })
+      @framework.deviceManager.registerDeviceClass("SnmpPresenceSensor", {
+        configDef: deviceConfigDef.SnmpPresenceSensor,
+        createCallback: (config, lastState) => new SnmpPresenceSensor(config, @, @framework, lastState)
+      })
+
 
       @framework.deviceManager.on 'discover', (eventData) =>
         @framework.deviceManager.discoverMessage 'pimatic-snmp', "scanning network for snmp devices"
@@ -163,5 +168,66 @@ module.exports = (env) ->
           if @debug
             env.logger.debug "empty result for snmp query #{@ids}" 
       )
+
+
+  class SnmpPresenceSensor extends env.devices.PresenceSensor
+
+    constructor: (@config, @plugin, @framework, lastState) ->
+      @id = @config.id
+      @name = @config.name  
+      @debug = @plugin.debug 
+      @community = @config.community
+      @oids = @config.oids
+      @timers = []
+      @ids = []
+      @_presence = lastState?.presence?.value or false
+
+      for oid in @oids
+        @ids.push oid.oid    
+
+      @session = new snmp.Session({host: @config.host, port: @config.port, community: "#{@community}"})        
+      Promise.promisifyAll @session      
+      if @debug
+        env.logger.debug @session.options     
+
+      @readSnmpData()
+      @timers.push setInterval(
+        ( =>
+          @readSnmpData()
+        ), @config.interval
+      ) 
+      super(@config, @plugin, @framework, lastState)  
+
+    destroy: () ->
+      for timerId in @timers
+        clearInterval timerId
+      super()
+
+    readSnmpData: () =>
+      @session.getAllAsync({ oids: @ids }).then( (varbinds) =>
+        if varbinds.length > 0
+          if @debug
+            env.logger.debug JSON.stringify(varbinds) 
+
+          if varbinds.length > 1
+            env.logger.warn "Only one oid is supported"
+
+          if varbinds[0].value is 1 
+            @_setPresence yes
+            @getPresence()
+          else
+            @_setPresence no
+            @getPresence()
+    
+        else 
+          if @debug
+            env.logger.debug "empty result for snmp query #{@ids}" 
+      )
+
+    getPresence: () ->
+      if @debug
+        env.logger.debug @_presence
+      Promise.resolve(@_presence) 
+
 
   return new SNMP

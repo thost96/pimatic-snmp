@@ -1,5 +1,9 @@
 # Release History
 
+* 20161208, v0.4.0 
+	* Added SnmpPresenceSensor
+	* Updated README.md
+
 * 20161202, v0.3.0
 	* Added support for oid names as label
 	* Added support for multiple oids at a single device

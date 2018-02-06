@@ -1,7 +1,7 @@
 module.exports = {
   title: "snmp config options"
   type: "object"
-  properties: 
+  properties:
     debug:
       description: "debug output"
       type: "boolean"
