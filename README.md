@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/pimatic-snmp.svg)](http://badge.fury.io/js/pimatic-snmp)
 [![dependencies status](https://david-dm.org/thost96/pimatic-snmp/status.svg)](https://david-dm.org/thost96/pimatic-snmp)
+[![Build Status](https://travis-ci.org/thost96/pimatic-snmp.svg?branch=master)](https://travis-ci.org/thost96/pimatic-snmp)
 
 A pimatic plugin to make snmp get request. The Oid can be found in the device mib file provided by the manufacture or using [Oidview](http://www.oidview.com/). 
 
