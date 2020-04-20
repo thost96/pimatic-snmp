@@ -19,7 +19,7 @@
   },
   "configSchema": "snmp-config-schema.coffee",
   "dependencies": {
-    "snmp-native": "1.0.21",
+    "snmp-native": "1.2.0",
     "netmask": "^1.0.6"
   },
   "peerDependencies": {
