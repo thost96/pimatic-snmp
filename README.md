@@ -92,6 +92,6 @@ See [Release History](https://github.com/thost96/pimatic-snmp/blob/master/Histor
 
 ## License 
 
-Copyright (c) 2016, Thorsten Reichelt and contributors. All rights reserved.
+Copyright (c) thost96 and contributors. All rights reserved.
 
 License: [GPL-2.0](https://github.com/thost96/pimatic-snmp/blob/master/LICENSE).
