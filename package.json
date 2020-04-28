@@ -1,6 +1,6 @@
 { "name": "pimatic-snmp",
   "description": "read snmp data from various devices",
-  "author": "Thorsten Reichelt (thost96) <info@thorstenreichelt.de>",
+  "author": "thost96 <info@thorstenreichelt.de>",
   "main": "snmp",
   "files": [
     "snmp.coffee",
@@ -11,7 +11,7 @@
     "LICENSE"
   ],
   "license": "GPL-2.0",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "homepage": "http://github.com/thost96/",
   "repository": {
     "type": "git",
