@@ -1,5 +1,9 @@
 # Release History
 
+* 20200428, v04.2 
+	* added github actions with automated npm publish
+	* updated dependencies to latest versions
+
 * 20180206, v0.4.1
 	* added Travis CI and updated readme
 
