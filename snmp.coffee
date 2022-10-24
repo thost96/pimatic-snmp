@@ -229,5 +229,4 @@ module.exports = (env) ->
         env.logger.debug @_presence
       Promise.resolve(@_presence) 
 
-
   return new SNMP
