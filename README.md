@@ -20,7 +20,7 @@ The plugin has the following configuration properties:
 
 
 ## Device Configuration
-The plugin supports auto discover of snmp devices on your connected networks. 
+The plugin supports auto discover of snmp devices on your connected networks.
 As default the community `"public"` and the oid `'.1.3.6.1.2.1.1.5.0'` for sysname property are used.
 
 The oids must be provied using this format: .x.xx.x.x.x.xxx - for example: .1.2.840.10006.300.43.1.3.0
@@ -34,7 +34,7 @@ The SnmpSensor displays the output of your specified command to the gui.
       "id": "snmp1",
       "class": "SnmpSensor",
       "name": "Snmp Sensor",
-      "host": "",      
+      "host": "",
       "oids": [
         {
           "label": "SysName",
@@ -61,7 +61,7 @@ The SnmpSensor displays the output of your specified command to the gui.
       "id": "snmp2",
       "class": "SnmpPresenceSensor",
       "name": "Snmp Presence Sensor",
-      "host": "",      
+      "host": "",
       "oids": [
         {
           "label": "State",
