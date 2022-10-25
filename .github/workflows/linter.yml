@@ -1,0 +1,9 @@
+---
+name: Lint Code Base
+
+on:
+  push:
+
+jobs:
+  call-super-linter:
+    uses: thost96/workflows/.github/workflows/linter.yml@main
