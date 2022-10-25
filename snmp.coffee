@@ -1,4 +1,4 @@
-capitalizeFirstLetter = (string) =>
+capitalizeFirstLetter = (string) ->
   return string.charAt(0).toUpperCase() + string.slice(1)
 
 module.exports = (env) ->
@@ -132,11 +132,11 @@ module.exports = (env) ->
                 type = "string"
 
               @attr[@labels[key]] = {
-                  type: type
-                  description: @labels[key]
-                  value: val.value
-                  acronym: @labels[key]
-                }
+                type: type
+                description: @labels[key]
+                value: val.value
+                acronym: @labels[key]
+              }
               if @debug
                 env.logger.debug @attr
 
